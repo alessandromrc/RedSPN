@@ -1,0 +1,41 @@
+# Output files
+*.json
+*.html
+*.csv
+ad_audit_*.json
+ad_audit_*.html
+ad_audit_*.csv
+report_*.html
+audit_*.json
+
+# Keep libs directory (libraries are needed for offline HTML reports)
+!libs/
+!libs/**
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# PowerShell
+*.ps1.bak
+*.psm1.bak
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
