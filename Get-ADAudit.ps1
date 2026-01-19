@@ -664,65 +664,65 @@ if (-not $SkipComputerSecurityChecks) {
     try {
         $computerCount = 0
         $enabledComputers = $auditData.Computers | Where-Object { $_.Enabled -eq $true } | Select-Object -First $MaxComputersToCheck
-    
-    foreach ($computer in $enabledComputers) {
-        $computerCount++
         
-        # Try to get the best computer name to use for connection
-        $computerName = $null
-        if ($computer.DNSHostName) {
-            $computerName = $computer.DNSHostName
-        } elseif ($computer.IPv4Address) {
-            $computerName = $computer.IPv4Address
-        } else {
-            $computerName = $computer.SamAccountName -replace '\$', ''
-        }
-        
-        if ($computerCount % 10 -eq 0) {
-            Write-Host "    Processed $computerCount / $($enabledComputers.Count) computers..." -ForegroundColor Gray
-        }
-        
-        Write-Host "    Checking $computerName ($($computer.SamAccountName))..." -ForegroundColor Gray
-        
-        try {
-            $avStatus = Get-AntivirusStatus -ComputerName $computerName
-            $bitlockerStatus = Get-BitLockerStatus -ComputerName $computerName
-            $updateStatus = Get-WindowsUpdateStatus -ComputerName $computerName
-            $firewallStatus = Get-FirewallStatus -ComputerName $computerName
+        foreach ($computer in $enabledComputers) {
+            $computerCount++
             
-            $securityStatus = @{
-                ComputerName = $computerName
-                SamAccountName = $computer.SamAccountName
-                DNSHostName = if ($computer.DNSHostName) { $computer.DNSHostName } else { $null }
-                IPv4Address = if ($computer.IPv4Address) { $computer.IPv4Address } else { $null }
-                Antivirus = $avStatus
-                BitLocker = $bitlockerStatus
-                WindowsUpdate = $updateStatus
-                Firewall = $firewallStatus
-                LastChecked = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+            # Try to get the best computer name to use for connection
+            $computerName = $null
+            if ($computer.DNSHostName) {
+                $computerName = $computer.DNSHostName
+            } elseif ($computer.IPv4Address) {
+                $computerName = $computer.IPv4Address
+            } else {
+                $computerName = $computer.SamAccountName -replace '\$', ''
             }
             
-            # Add to array - ensure we're working with the actual hashtable reference
-            $auditData['ComputerSecurityStatus'] += ,$securityStatus
-        } catch {
-            # Silently continue on individual computer errors
-            # Still add an entry with error info
-            $securityStatus = @{
-                ComputerName = $computerName
-                SamAccountName = $computer.SamAccountName
-                DNSHostName = if ($computer.DNSHostName) { $computer.DNSHostName } else { $null }
-                IPv4Address = if ($computer.IPv4Address) { $computer.IPv4Address } else { $null }
-                Antivirus = @{ Installed = $false; Online = $false; Error = $_.Exception.Message }
-                BitLocker = @{ Enabled = $false; Online = $false; Error = $_.Exception.Message }
-                WindowsUpdate = @{ Online = $false; Error = $_.Exception.Message }
-                Firewall = @{ Enabled = $false; Online = $false; Error = $_.Exception.Message }
-                LastChecked = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+            if ($computerCount % 10 -eq 0) {
+                Write-Host "    Processed $computerCount / $($enabledComputers.Count) computers..." -ForegroundColor Gray
             }
-            # Add to array - ensure we're working with the actual hashtable reference
-            $auditData['ComputerSecurityStatus'] += ,$securityStatus
+            
+            Write-Host "    Checking $computerName ($($computer.SamAccountName))..." -ForegroundColor Gray
+            
+            try {
+                $avStatus = Get-AntivirusStatus -ComputerName $computerName
+                $bitlockerStatus = Get-BitLockerStatus -ComputerName $computerName
+                $updateStatus = Get-WindowsUpdateStatus -ComputerName $computerName
+                $firewallStatus = Get-FirewallStatus -ComputerName $computerName
+                
+                $securityStatus = @{
+                    ComputerName = $computerName
+                    SamAccountName = $computer.SamAccountName
+                    DNSHostName = if ($computer.DNSHostName) { $computer.DNSHostName } else { $null }
+                    IPv4Address = if ($computer.IPv4Address) { $computer.IPv4Address } else { $null }
+                    Antivirus = $avStatus
+                    BitLocker = $bitlockerStatus
+                    WindowsUpdate = $updateStatus
+                    Firewall = $firewallStatus
+                    LastChecked = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+                }
+                
+                # Add to array - ensure we're working with the actual hashtable reference
+                $auditData['ComputerSecurityStatus'] += ,$securityStatus
+            } catch {
+                # Silently continue on individual computer errors
+                # Still add an entry with error info
+                $securityStatus = @{
+                    ComputerName = $computerName
+                    SamAccountName = $computer.SamAccountName
+                    DNSHostName = if ($computer.DNSHostName) { $computer.DNSHostName } else { $null }
+                    IPv4Address = if ($computer.IPv4Address) { $computer.IPv4Address } else { $null }
+                    Antivirus = @{ Installed = $false; Online = $false; Error = $_.Exception.Message }
+                    BitLocker = @{ Enabled = $false; Online = $false; Error = $_.Exception.Message }
+                    WindowsUpdate = @{ Online = $false; Error = $_.Exception.Message }
+                    Firewall = @{ Enabled = $false; Online = $false; Error = $_.Exception.Message }
+                    LastChecked = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+                }
+                # Add to array - ensure we're working with the actual hashtable reference
+                $auditData['ComputerSecurityStatus'] += ,$securityStatus
+            }
         }
-    }
-    
+        
         Write-Host "   ✓ Security status gathered for $computerCount computers" -ForegroundColor Green
     } catch {
         Write-Host "   ✗ Error gathering computer security status" -ForegroundColor Red
