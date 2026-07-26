@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.svg" alt="RedSPN" width="128" height="128" />
+</p>
+
 # RedSPN
 
 Active Directory security audit tool that finds security risks and generates a red-themed HTML report.
