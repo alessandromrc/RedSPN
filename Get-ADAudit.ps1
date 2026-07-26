@@ -1,4 +1,4 @@
-#Requires -Modules ActiveDirectory
+﻿#Requires -Modules ActiveDirectory
 #Requires -Version 5.1
 
 <#
@@ -66,21 +66,21 @@ $auditData = @{
     Statistics = @{}
 }
 
-# ASCII Art Banner
+# ASCII Art Banner (pure ASCII - safe on Windows PowerShell consoles)
 $banner = @"
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                                                                               ║
-║  ░█████████                    ░██   ░██████   ░█████████  ░███    ░██        ║
-║  ░██     ░██                   ░██  ░██   ░██  ░██     ░██ ░████   ░██        ║
-║  ░██     ░██  ░███████   ░████████ ░██         ░██     ░██ ░██░██  ░██        ║
-║  ░█████████  ░██    ░██ ░██    ░██  ░████████  ░█████████  ░██ ░██ ░██        ║
-║  ░██   ░██   ░█████████ ░██    ░██         ░██ ░██         ░██  ░██░██        ║
-║  ░██    ░██  ░██        ░██   ░███  ░██   ░██  ░██         ░██   ░████        ║
-║  ░██     ░██  ░███████   ░█████░██   ░██████   ░██         ░██    ░███        ║
-║                                                                               ║
-║                    Active Directory Security Audit Tool                       ║
-║                                                                               ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
++-------------------------------------------------------------------------------+
+|                                                                               |
+|  #####   #######  #####    ####   #####   ##   ##                             |
+|  ##  ##  ##       ##  ##  ##  ##  ##  ##  ###  ##                             |
+|  ##  ##  ##       ##  ##  ##      ##  ##  #### ##                             |
+|  #####   #####    ##  ##   ####   #####   ## ####                             |
+|  ## ##   ##       ##  ##      ##  ##      ##  ###                             |
+|  ##  ##  ##       ##  ##  ##  ##  ##      ##   ##                             |
+|  ##  ##  #######  #####    ####   ##      ##   ##                             |
+|                                                                               |
+|                    Active Directory Security Audit Tool                       |
+|                                                                               |
++-------------------------------------------------------------------------------+
 "@
 
 Write-Host $banner -ForegroundColor Red
@@ -95,20 +95,20 @@ try {
     $psVersion = $PSVersionTable.PSVersion
     
     $neofetch = @"
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                                                                               ║
-║  Domain          $($domain.Name.PadRight(60)) ║
-║  NetBIOS         $($domain.NetBIOSName.PadRight(60)) ║
-║  Forest          $($forest.Name.PadRight(60)) ║
-║  Domain Mode     $($domain.DomainMode.PadRight(60)) ║
-║  Forest Mode     $($forest.ForestMode.PadRight(60)) ║
-║  DC              $($dc.HostName.PadRight(60)) ║
-║  OS              $($os.Caption.PadRight(60)) ║
-║  PowerShell      $($psVersion.ToString().PadRight(60)) ║
-║  User            $($env:USERNAME.PadRight(60)) ║
-║  Computer        $($env:COMPUTERNAME.PadRight(60)) ║
-║                                                                               ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
++-------------------------------------------------------------------------------+
+|                                                                               |
+|  Domain          $($domain.Name.PadRight(60)) |
+|  NetBIOS         $($domain.NetBIOSName.PadRight(60)) |
+|  Forest          $($forest.Name.PadRight(60)) |
+|  Domain Mode     $($domain.DomainMode.PadRight(60)) |
+|  Forest Mode     $($forest.ForestMode.PadRight(60)) |
+|  DC              $($dc.HostName.PadRight(60)) |
+|  OS              $($os.Caption.PadRight(60)) |
+|  PowerShell      $($psVersion.ToString().PadRight(60)) |
+|  User            $($env:USERNAME.PadRight(60)) |
+|  Computer        $($env:COMPUTERNAME.PadRight(60)) |
+|                                                                               |
++-------------------------------------------------------------------------------+
 "@
     Write-Host $neofetch -ForegroundColor Green
 } catch {
@@ -117,15 +117,15 @@ try {
     $psVersion = $PSVersionTable.PSVersion
     
     $neofetch = @"
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                                                                               ║
-║  Domain          $($env:USERDOMAIN.PadRight(60)) ║
-║  OS              $($os.Caption.PadRight(60)) ║
-║  PowerShell      $($psVersion.ToString().PadRight(60)) ║
-║  User            $($env:USERNAME.PadRight(60)) ║
-║  Computer        $($env:COMPUTERNAME.PadRight(60)) ║
-║                                                                               ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
++-------------------------------------------------------------------------------+
+|                                                                               |
+|  Domain          $($env:USERDOMAIN.PadRight(60)) |
+|  OS              $($os.Caption.PadRight(60)) |
+|  PowerShell      $($psVersion.ToString().PadRight(60)) |
+|  User            $($env:USERNAME.PadRight(60)) |
+|  Computer        $($env:COMPUTERNAME.PadRight(60)) |
+|                                                                               |
++-------------------------------------------------------------------------------+
 "@
     Write-Host $neofetch -ForegroundColor Green
 }
@@ -230,9 +230,9 @@ try {
         $auditData.Users += $userObj
     }
     
-    Write-Host "   ✓ Found $($auditData.Users.Count) user accounts" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.Users.Count) user accounts" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error enumerating users: $_" -ForegroundColor Red
+    Write-Host "   [x] Error enumerating users: $_" -ForegroundColor Red
 }
 
 # Enumerate Computer Accounts
@@ -290,9 +290,9 @@ try {
         $auditData.Computers += $compObj
     }
     
-    Write-Host "   ✓ Found $($auditData.Computers.Count) computer accounts" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.Computers.Count) computer accounts" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error enumerating computers: $_" -ForegroundColor Red
+    Write-Host "   [x] Error enumerating computers: $_" -ForegroundColor Red
 }
 
 # Identify Service Accounts (gMSA and accounts with passwords)
@@ -353,9 +353,9 @@ try {
         }
     }
     
-    Write-Host "   ✓ Found $($auditData.ServiceAccounts.Count) service accounts" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.ServiceAccounts.Count) service accounts" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error identifying service accounts" -ForegroundColor Red
+    Write-Host "   [x] Error identifying service accounts" -ForegroundColor Red
 }
 
 # Check krbtgt account
@@ -374,10 +374,10 @@ try {
             $auditData.KrbtgtInfo.DaysSincePasswordChange = [int]((Get-Date) - $pwdDate).TotalDays
         }
         
-        Write-Host "   ✓ krbtgt password last set: $($auditData.KrbtgtInfo.PasswordLastSet)" -ForegroundColor Green
+        Write-Host "   [+] krbtgt password last set: $($auditData.KrbtgtInfo.PasswordLastSet)" -ForegroundColor Green
     }
 } catch {
-    Write-Host "   ✗ Error checking krbtgt" -ForegroundColor Red
+    Write-Host "   [x] Error checking krbtgt" -ForegroundColor Red
 }
 
 # Audit NTLM usage from Security Event Log
@@ -429,12 +429,12 @@ try {
         }
         
         $auditData.NTLMEvents = $ntlmEvents | Select-Object -First 100  # Limit to 100 most recent
-        Write-Host "   ✓ Found $($auditData.NTLMEvents.Count) recent NTLM authentication events" -ForegroundColor Green
+        Write-Host "   [+] Found $($auditData.NTLMEvents.Count) recent NTLM authentication events" -ForegroundColor Green
         if ($auditData.NTLMEvents.Count -eq 0) {
         }
     }
 } catch {
-    Write-Host "   ✗ Error scanning event log (requires elevated permissions)" -ForegroundColor Red
+    Write-Host "   [x] Error scanning event log (requires elevated permissions)" -ForegroundColor Red
     $auditData.NTLMEvents = @()
 }
 
@@ -723,9 +723,9 @@ if (-not $SkipComputerSecurityChecks) {
             }
         }
         
-        Write-Host "   ✓ Security status gathered for $computerCount computers" -ForegroundColor Green
+        Write-Host "   [+] Security status gathered for $computerCount computers" -ForegroundColor Green
     } catch {
-        Write-Host "   ✗ Error gathering computer security status" -ForegroundColor Red
+        Write-Host "   [x] Error gathering computer security status" -ForegroundColor Red
     }
 } else {
     Write-Host "Skipping computer security checks" -ForegroundColor Yellow
@@ -752,10 +752,10 @@ try {
             ComplexityEnabled = $domainPolicy.ComplexityEnabled
             ReversibleEncryptionEnabled = $domainPolicy.ReversibleEncryptionEnabled
         }
-        Write-Host "   ✓ Password policy retrieved" -ForegroundColor Green
+        Write-Host "   [+] Password policy retrieved" -ForegroundColor Green
     }
 } catch {
-    Write-Host "   ✗ Error retrieving password policy" -ForegroundColor Red
+    Write-Host "   [x] Error retrieving password policy" -ForegroundColor Red
 }
 
 # Get Account Lockout Policy
@@ -776,7 +776,7 @@ try {
                 $null 
             }
         }
-        Write-Host "   ✓ Account lockout policy retrieved" -ForegroundColor Green
+        Write-Host "   [+] Account lockout policy retrieved" -ForegroundColor Green
     } else {
         Write-Host "   [!] Account lockout policy not configured" -ForegroundColor Yellow
         $auditData.AccountLockoutPolicy = @{
@@ -786,7 +786,7 @@ try {
         }
     }
 } catch {
-    Write-Host "   ✗ Error retrieving account lockout policy" -ForegroundColor Red
+    Write-Host "   [x] Error retrieving account lockout policy" -ForegroundColor Red
     $auditData.AccountLockoutPolicy = @{
         LockoutThreshold = $null
         LockoutDuration = $null
@@ -811,9 +811,9 @@ try {
         }
         $auditData.DomainControllers += $dcInfo
     }
-    Write-Host "   ✓ Found $($auditData.DomainControllers.Count) domain controllers" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.DomainControllers.Count) domain controllers" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error enumerating domain controllers" -ForegroundColor Red
+    Write-Host "   [x] Error enumerating domain controllers" -ForegroundColor Red
 }
 
 # Get Trust Relationships
@@ -833,9 +833,9 @@ try {
         }
         $auditData.TrustRelationships += $trustInfo
     }
-    Write-Host "   ✓ Found $($auditData.TrustRelationships.Count) trust relationships" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.TrustRelationships.Count) trust relationships" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error enumerating trust relationships" -ForegroundColor Red
+    Write-Host "   [x] Error enumerating trust relationships" -ForegroundColor Red
 }
 
 # Get Organizational Units
@@ -853,9 +853,9 @@ try {
         }
         $auditData.OrganizationalUnits += $ouInfo
     }
-    Write-Host "   ✓ Found $($auditData.OrganizationalUnits.Count) organizational units" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.OrganizationalUnits.Count) organizational units" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error enumerating organizational units" -ForegroundColor Red
+    Write-Host "   [x] Error enumerating organizational units" -ForegroundColor Red
 }
 
 # Get Security Groups (focus on high-privilege groups)
@@ -914,9 +914,9 @@ try {
         }
     }
     
-    Write-Host "   ✓ Found $($auditData.SecurityGroups.Count) security groups" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.SecurityGroups.Count) security groups" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error enumerating security groups" -ForegroundColor Red
+    Write-Host "   [x] Error enumerating security groups" -ForegroundColor Red
 }
 
 # Find Empty Groups
@@ -933,9 +933,9 @@ try {
             }
         }
     }
-    Write-Host "   ✓ Found $($auditData.EmptyGroups.Count) empty groups" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.EmptyGroups.Count) empty groups" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error finding empty groups" -ForegroundColor Red
+    Write-Host "   [x] Error finding empty groups" -ForegroundColor Red
 }
 
 # Find Large Groups (potential security risk)
@@ -952,9 +952,9 @@ try {
             }
         }
     }
-    Write-Host "   ✓ Found $($auditData.LargeGroups.Count) groups with >1000 members" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.LargeGroups.Count) groups with >1000 members" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error finding large groups" -ForegroundColor Red
+    Write-Host "   [x] Error finding large groups" -ForegroundColor Red
 }
 
 # Find Suspicious Accounts
@@ -1017,9 +1017,9 @@ try {
     }
     
     $auditData.SuspiciousAccounts = $suspiciousAccounts
-    Write-Host "   ✓ Found $($suspiciousAccounts.Count) suspicious accounts" -ForegroundColor Yellow
+    Write-Host "   [+] Found $($suspiciousAccounts.Count) suspicious accounts" -ForegroundColor Yellow
 } catch {
-    Write-Host "   ✗ Error identifying suspicious accounts" -ForegroundColor Red
+    Write-Host "   [x] Error identifying suspicious accounts" -ForegroundColor Red
 }
 
 # Check for Failed Logon Attempts (Event ID 4625)
@@ -1050,9 +1050,9 @@ try {
     }
     
     $auditData.FailedLogons = $failedLogons | Select-Object -First 100
-    Write-Host "   ✓ Found $($auditData.FailedLogons.Count) recent failed logon attempts" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.FailedLogons.Count) recent failed logon attempts" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error scanning failed logons (requires Security log access)" -ForegroundColor Red
+    Write-Host "   [x] Error scanning failed logons (requires Security log access)" -ForegroundColor Red
     $auditData.FailedLogons = @()
 }
 
@@ -1070,9 +1070,9 @@ try {
         }
         $auditData.GPOSettings += $gpoInfo
     }
-    Write-Host "   ✓ Found $($auditData.GPOSettings.Count) GPOs" -ForegroundColor Green
+    Write-Host "   [+] Found $($auditData.GPOSettings.Count) GPOs" -ForegroundColor Green
 } catch {
-    Write-Host "   ✗ Error enumerating GPOs (Group Policy module may not be installed)" -ForegroundColor Red
+    Write-Host "   [x] Error enumerating GPOs (Group Policy module may not be installed)" -ForegroundColor Red
 }
 
 # Calculate statistics
@@ -1186,13 +1186,13 @@ try {
         } catch {
         }
     } else {
-        Write-Host "✗ ERROR: File was not created after all write attempts!" -ForegroundColor Red
+        Write-Host "[x] ERROR: File was not created after all write attempts!" -ForegroundColor Red
     }
     
     Write-Host ""
-    Write-Host "✓ Audit complete! Data exported to: $OutputPath" -ForegroundColor Green
+    Write-Host "[+] Audit complete! Data exported to: $OutputPath" -ForegroundColor Green
 } catch {
-    Write-Host "✗ ERROR exporting data: $_" -ForegroundColor Red
+    Write-Host "[x] ERROR exporting data: $_" -ForegroundColor Red
     Write-Host "    Error details: $($_.Exception.Message)" -ForegroundColor Red
     throw
 }
